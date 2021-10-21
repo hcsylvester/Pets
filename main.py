@@ -14,14 +14,20 @@
 from petsClass import Pets
 import pymysql.cursors
 from creds import *
-
+import pprint as pp
 petList = []
 
 def showData():
     # Our sql statement, easy to read
     sqlSelect = """
-      Select pets.name as pets_name, pets.age, owners.name as owners_name, types.animal_type from pets join owners on 
-      pets.owner_id = owners.id join types on pets.animal_type_id = types.id;
+      Select 
+      pets.id as id, 
+      pets.name as pets_name, 
+      pets.age, 
+      owners.name as owners_name, 
+      types.animal_type from pets 
+      join owners on pets.owner_id = owners.id 
+      join types on pets.animal_type_id = types.id;
       
       """
 
@@ -33,35 +39,15 @@ def showData():
     for row in cursor:
         print(row)
 
-        variable = Pets(petName = row['petName'],
-                             ownerName=row['ownerName'],
-                             petAge=row['petAge'],
-                             animalType=row['animalType'],
-                             animalId=row['animalId'])
+        variable = Pets(petName=row['pets_name'],
+                        ownerName=row['owners_name'],
+                        petAge=row['age'],
+                        animalType=row['animal_type'],
+                        animalId=row['id'])
         petList.append(variable)
-        print(variable)
+        
     input("Press [ENTER] to continue. ")
 
-# def listData():
-#     # Our sql statement, easy to read
-#     sqlSelect = """
-#       Select pets.name as pets_name, pets.age, owners.name as owners_name, types.animal_type from pets join owners on
-#       pets.owner_id = owners.id join types on pets.animal_type_id = types.id;
-#
-#       """
-#
-#     # Execute select
-#     cursor.execute(sqlSelect)
-#     # Loop through all the results
-#     #  Print the data, nicely
-#     for row in cursor:
-#         variable = Pets(petName = row['petName'],
-#                         ownerName=row['ownerName'],
-#                         petAge=row['petAge'],
-#                         animalType=row['animalType'],
-#                         animalId=row['animalId'])
-#         petList.append(variable)
-#     print(petList)
 
 #Now we create an object for each one of these animals
 # Connect to the database
@@ -87,16 +73,12 @@ try:
         # Show initial data
         print(f"These are all of the animals and their owners!")
         showData()
-    #     variable = []
-    #     for row in cursor:
-    #         variable = Pets(row['petName'],
-    #                         row['ownerName'],
-    #                         row['petAge'],
-    #                         row['animalType'],
-    #                         row['animalId'])
-    #     petList.append(variable)
-    #
-    # print(petList)
+
+
+        # for row in petList:
+        #     variable = []
+        pp.pprint(petList)
+
 
         # # NOTE: We are using placeholders in our SQL statement
         # #  See https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
@@ -168,6 +150,14 @@ except Exception as e:
 finally:
     myConnection.close()
     print("Connection closed.")
+
+# while True:
+#     request = input('Please enter an animal ID to see more info on that animal or press "q" to quit!')
+#
+#
+#     if request == "q":
+#         print("Thank you and have a nice day!")
+#         break
 
 
 
