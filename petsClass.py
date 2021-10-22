@@ -1,3 +1,16 @@
+# Hunter C. Sylvester
+# Purpose: Creating a Pet Class that allows a user to set and get a pet's age, name, owner's name, animal type, and
+#          animal id
+# The Pets class
+#
+# Properties
+#  Pet Age: getPetAge(), setPetAge()
+#  Pet Name: getPetName(), setPetName()
+#  Owner Name: getOwnerName(), setOwnerName()
+#  Animal Type: getAnimalType(), setAnimalType()
+#  Animal ID: getAnimalId(), setAnimalId()
+#
+
 class Pets:
     # Private Properties
     __petAge: int = 1
@@ -23,43 +36,47 @@ class Pets:
         self.setAnimalType(animalType)
         self.setAnimalId(animalId)
 
-
-###############################################
-    def getPetAge(self) -> int:
+    ###############################################
+    # Getter and Setter for the age of the pet
+    def getPetAge(self):
         return(self.__petAge)
 
-    def setPetAge(self, petAge) -> None:
+    def setPetAge(self, petAge):
         if petAge:
             self.__petAge = petAge
 
-###############################################
-    def getPetName(self) -> str:
+    ###############################################
+    # Getter and Setter for the pet's name
+    def getPetName(self):
         return(self.__petName)
 
-    def setPetName(self, petName) -> None:
+    def setPetName(self, petName):
         if petName:
             self.__petName = petName
 
-###############################################
-    def getOwnerName(self) -> str:
+    ###############################################
+    # Getter and Setter for the pet owner's name
+    def getOwnerName(self):
         return (self.__ownerName)
 
-    def setOwnerName(self, ownerName) -> None:
+    def setOwnerName(self, ownerName):
         if ownerName:
             self.__ownerName = ownerName
 
-###############################################
-    def getAnimalType(self) -> str:
+    ###############################################
+    # Getter and Setter for the pet's animal type
+    def getAnimalType(self):
         return (self.__animalType)
 
-    def setAnimalType(self, animalType) -> None:
+    def setAnimalType(self, animalType):
         if animalType:
             self.__animalType = animalType
 
-###############################################
-    def getAnimalId(self) -> int:
+    ###############################################
+    # Getter and Setter for the pet's ID
+    def getAnimalId(self):
         return (self.__animalId)
 
-    def setAnimalId(self, animalId) -> None:
+    def setAnimalId(self, animalId):
         if animalId:
             self.__animalId = animalId
