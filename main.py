@@ -1,24 +1,22 @@
-# Ken Holm
-# Purpose: This is my CRUD test program
-# Create
-# Read
-# Update
-# Delete
+# Hunter Sylvester
+# Purpose: Shows all pets from an SQL database and lets people look at the info pertaining to that specific email
 #
-# See https://pymysql.readthedocs.io/en/latest/index.html
-#  We need to install the mypysql library
-#  In the Terminal window (bottom of PyCharm), run
-#  pip3 install pymysql
+# We need to install the mypysql library
+# In the Terminal window (bottom of PyCharm), run
+# pip3 install pymysql
 # pip3 install cryptography
 
+# Import pet class, module, and cred file for MySQL access
 from petsClass import Pets
 import pymysql.cursors
 from creds import *
-import pprint as pp
+
+# Create a pet list that is empty for later use
 petList = []
 
-def showData():
-    # Our sql statement, easy to read
+# Function that accesses sql pets data and inputs data into Pets class
+def gatherData():
+    # sql statement
     sqlSelect = """
       Select 
       pets.id as id, 
@@ -34,22 +32,15 @@ def showData():
     # Execute select
     cursor.execute(sqlSelect)
 
-    # Loop through all the results
-    #  Print the data, nicely
+    # Loop through the specific sql statement reading data into petList for each row
     for row in cursor:
-        print(row)
-
         variable = Pets(petName=row['pets_name'],
                         ownerName=row['owners_name'],
                         petAge=row['age'],
                         animalType=row['animal_type'],
                         animalId=row['id'])
         petList.append(variable)
-        
-    input("Press [ENTER] to continue. ")
 
-
-#Now we create an object for each one of these animals
 # Connect to the database
 try:
     myConnection = pymysql.connect(host=hostname,
@@ -60,104 +51,67 @@ try:
                                    cursorclass=pymysql.cursors.DictCursor)
 
 except Exception as e:
-    print(f"An error has occurred.  Exiting: {e}")
+    print(f"Sorry, connection was not made to sql database.  Check mysql information is set correctly.")
     print()
     exit()
 
-
-# Now that we are connected, execute a query
-#  and do something with the result set.
+# Once connected, we execute a query
 try:
     with myConnection.cursor() as cursor:
         # ==================
-        # Show initial data
-        print(f"These are all of the animals and their owners!")
-        showData()
+        # Runs the function to access sql with specific sql commands and gives the Pets data
+        gatherData()
 
-
-        # for row in petList:
-        #     variable = []
-        pp.pprint(petList)
-
-
-        # # NOTE: We are using placeholders in our SQL statement
-        # #  See https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
-        # sqlInsert = """
-        #     insert into
-        #       pets (id, first_name, last_name, username)
-        #     values
-        #       (%s, %s, %s, %s);
-        #     """
-        #
-        # sqlUpdate = """
-        #     update
-        #       pets
-        #     set
-        #       first_name = %s
-        #     where
-        #       id = %s;
-        #     """
-        #
-        # sqlDelete = """
-        #     delete from
-        #       pets
-        #     where
-        #       id = %s;
-        #     """
-        # # ===============
-        # # Execute insert
-        # print(f"Inserting data")
-        # cursor.execute(sqlInsert, (9999, 'Ken', 'Holm', 'kholm'))
-        #
-        # print(f"We have executed the INSERT statement")
-        # print(f"Does the data exist outside of this program?")
-        # showData()
-        #
-        # # Now, we have to COMMIT our command
-        # myConnection.commit()
-        #
-        # print(f"We have now committed the data")
-        # print(f"What about now?")
-        # showData()
-        #
-        # # ===============
-        # # Execute update
-        # print(f"Updating data")
-        # cursor.execute(sqlUpdate, ('Alex', 9999))
-        #
-        # # Now, we have to COMMIT our command
-        # myConnection.commit()
-        #
-        # showData()
-        #
-        # # ===============
-        # # Execute delete
-        # print(f"Delete data")
-        # cursor.execute(sqlDelete, (9999))
-        #
-        # # Now, we have to COMMIT our command
-        # myConnection.commit()
-        #
-        # showData()
-
-
-# If there is an exception, show what that is
+# If there is an exception
 except Exception as e:
-    print(f"An error has occurred.  Exiting: {e}")
+    print(f"Sorry, but the connection was not made. Check mysql information.")
     print()
 
 # Close connection
 finally:
     myConnection.close()
     print("Connection closed.")
+    print("\n")
 
-# while True:
-#     request = input('Please enter an animal ID to see more info on that animal or press "q" to quit!')
-#
-#
-#     if request == "q":
-#         print("Thank you and have a nice day!")
-#         break
+# Show the list of pets to person and let them choose one until they want to quit
+while True:
+    try:
+        print("Please choose a pet from the list below:")
 
+        # Prints each pet with id
+        for i in petList:
+            print(f"[{i.getAnimalId()}]  {i.getPetName()}")
 
+        print("[Q] Quit")
 
+        requestAnimal = input('Please enter a pet ID (integer) to see more info pertaining to that pet '
+                              'or press [Q] to quit! \n')
+
+        if str.upper(requestAnimal) == "Q":
+            print("Thank you and have a nice day!")
+            break
+
+        elif 1 <= int(requestAnimal) <= 8 or int(requestAnimal) == 10:
+            if int(requestAnimal) == 10:
+                # Must subtract 2 due to the indexing of Rex
+                value = petList[int(requestAnimal)-2]
+                print(f"{value.getPetName()} is {value.getPetAge()} years old.  "
+                      f"{value.getPetName()} is a {value.getAnimalType()}.  "
+                      f"{value.getPetName()}'s owner is {value.getOwnerName()}.")
+                input("Press [ENTER] to continue! \n")
+
+            else:
+                # Must subtract 1 due to the index starting at 0
+                value = petList[int(requestAnimal)-1]
+                print(f"{value.getPetName()} is {value.getPetAge()} years old.  "
+                      f"{value.getPetName()} is a {value.getAnimalType()}.  "
+                      f"{value.getPetName()}'s owner is {value.getOwnerName()}. \n")
+                input("Press [ENTER] to continue! \n")
+
+        else:
+            input(f'{requestAnimal} is not associated with one of the pets. \nPlease press [ENTER] to continue! \n')
+
+    except Exception:
+        print(f'{requestAnimal} is not associated with one of the pets.  Remember, it must be one of their IDs or "Q" '
+              f'to quit!')
+        input("Press [ENTER] to continue!\n")
